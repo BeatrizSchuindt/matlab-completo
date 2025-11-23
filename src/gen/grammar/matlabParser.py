@@ -233,6 +233,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitPrograma" ):
                 listener.exitPrograma(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPrograma" ):
+                return visitor.visitPrograma(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -298,6 +304,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitInstrucao" ):
                 listener.exitInstrucao(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstrucao" ):
+                return visitor.visitInstrucao(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -408,6 +420,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitInstrucaoSimples" ):
                 listener.exitInstrucaoSimples(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstrucaoSimples" ):
+                return visitor.visitInstrucaoSimples(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -491,6 +509,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitBlocoDeInstrucoes" ):
                 listener.exitBlocoDeInstrucoes(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlocoDeInstrucoes" ):
+                return visitor.visitBlocoDeInstrucoes(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -549,6 +573,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitInstrucaoDeBloco" ):
                 listener.exitInstrucaoDeBloco(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstrucaoDeBloco" ):
+                return visitor.visitInstrucaoDeBloco(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -634,6 +664,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitInstrucaoIf" ):
                 listener.exitInstrucaoIf(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstrucaoIf" ):
+                return visitor.visitInstrucaoIf(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -724,6 +760,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitInstrucaoFor" ):
                 listener.exitInstrucaoFor(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstrucaoFor" ):
+                return visitor.visitInstrucaoFor(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -786,6 +828,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitInstrucaoWhile" ):
                 listener.exitInstrucaoWhile(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInstrucaoWhile" ):
+                return visitor.visitInstrucaoWhile(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -842,6 +890,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLadoEsquerdoAtribuicao" ):
                 listener.exitLadoEsquerdoAtribuicao(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLadoEsquerdoAtribuicao" ):
+                return visitor.visitLadoEsquerdoAtribuicao(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -918,6 +972,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitAtribuicao" ):
                 listener.exitAtribuicao(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAtribuicao" ):
+                return visitor.visitAtribuicao(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -963,6 +1023,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressao" ):
                 listener.exitExpressao(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressao" ):
+                return visitor.visitExpressao(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1020,6 +1086,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressaoOuLogico" ):
                 listener.exitExpressaoOuLogico(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoOuLogico" ):
+                return visitor.visitExpressaoOuLogico(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1095,6 +1167,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressaoELogico" ):
                 listener.exitExpressaoELogico(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoELogico" ):
+                return visitor.visitExpressaoELogico(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1195,6 +1273,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitExpressaoComparacao" ):
                 listener.exitExpressaoComparacao(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoComparacao" ):
+                return visitor.visitExpressaoComparacao(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1263,6 +1347,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressaoIntervalo" ):
                 listener.exitExpressaoIntervalo(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoIntervalo" ):
+                return visitor.visitExpressaoIntervalo(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1341,6 +1431,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressaoAditiva" ):
                 listener.exitExpressaoAditiva(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoAditiva" ):
+                return visitor.visitExpressaoAditiva(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1430,6 +1526,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitExpressaoMultiplicativa" ):
                 listener.exitExpressaoMultiplicativa(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoMultiplicativa" ):
+                return visitor.visitExpressaoMultiplicativa(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1499,6 +1601,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitExpressaoPotencia" ):
                 listener.exitExpressaoPotencia(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoPotencia" ):
+                return visitor.visitExpressaoPotencia(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1566,6 +1674,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpressaoUnaria" ):
                 listener.exitExpressaoUnaria(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitExpressaoUnaria" ):
+                return visitor.visitExpressaoUnaria(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1652,6 +1766,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitAtomo" ):
                 listener.exitAtomo(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAtomo" ):
+                return visitor.visitAtomo(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1758,6 +1878,12 @@ class matlabParser ( Parser ):
             if hasattr( listener, "exitListaArgumentos" ):
                 listener.exitListaArgumentos(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitListaArgumentos" ):
+                return visitor.visitListaArgumentos(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1818,6 +1944,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitMatriz" ):
                 listener.exitMatriz(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMatriz" ):
+                return visitor.visitMatriz(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1880,6 +2012,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLinhasMatriz" ):
                 listener.exitLinhasMatriz(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLinhasMatriz" ):
+                return visitor.visitLinhasMatriz(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1944,6 +2082,12 @@ class matlabParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLinha" ):
                 listener.exitLinha(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLinha" ):
+                return visitor.visitLinha(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
