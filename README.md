@@ -20,7 +20,6 @@ Cada arquivo `main` representa uma **fase específica do compilador**, e o **úl
 - [Instalação do Graphviz](#instalação-do-graphviz)
   - [Windows](#windows)
   - [Linux--ubuntu-debian)](#linux-ubuntu-debian)
-- [Geração e visualização das árvores sintáticas](#geração-e-visualização-das-árvores-sintáticas)
 - [Exemplos de uso com o arquivo `triangulos.m`](#exemplos-de-uso-com-o-arquivo-triangulosm)
 
 ---
