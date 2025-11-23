@@ -1,5 +1,3 @@
-# src/main_semantic.py
-
 import sys
 from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 

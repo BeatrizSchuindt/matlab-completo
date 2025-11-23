@@ -14,6 +14,20 @@ class MatlabSemanticListener(matlabListener):
         self.current_scope = self.global_scope
         self.errors = []
 
+        builtin_funcs = [
+            "input",    # leitura do teclado
+            "fprintf",  # impressão formatada
+            "error",    # mensagem de erro
+            "zeros",    # criação de vetor/matriz de zeros
+            "disp",
+            "ones",
+            "eye",
+        ]
+
+        for name in builtin_funcs:
+            # marca como função embutida no escopo global
+            self.global_scope.define(name, type_="builtin_function")
+
     # ---------- utilitários internos ----------
     def push_scope(self, name):
         self.current_scope = Scope(name, self.current_scope)
@@ -50,13 +64,12 @@ class MatlabSemanticListener(matlabListener):
         name = ctx.ID().getText()
         self.current_scope.define(name, type_="var")
 
-    def exitInstrucaoFor(self, ctx: matlabParser.InstrucaoForContext):
+    def enterInstrucaoFor(self, ctx: matlabParser.InstrucaoForContext):
         """
         instrucaoFor
             : KW_FOR ID ASSIGN expressao blocoDeInstrucoes KW_END
         """
         var_name = ctx.ID().getText()
-        # variável de controle do for
         self.current_scope.define(var_name, type_="var")
 
     # ---------- uso de identificadores ----------
