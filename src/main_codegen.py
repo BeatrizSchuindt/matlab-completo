@@ -3,20 +3,31 @@ from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 
 from src.gen.grammar.matlabLexer import matlabLexer
 from src.gen.grammar.matlabParser import matlabParser
-from semantic.matlab_semantico_listener import MatlabSemanticListener
+from src.semantic.matlab_semantico_listener import MatlabSemanticListener
 from src.codegen.matlab_codegen_visitor import MatlabCodeGenVisitor
+from src.error import RaisingErrorListener, LexicalError, SyntacticError
 
 
 def compilar_arquivo(input_path: str, output_path: str = "output.py") -> None:
     input_stream = FileStream(input_path, encoding="utf-8")
 
-    # Léxico + parser
+    # Léxico
     lexer = matlabLexer(input_stream)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(RaisingErrorListener())
+
+    # Parse
     token_stream = CommonTokenStream(lexer)
     parser = matlabParser(token_stream)
-    tree = parser.programa()
+    parser.removeErrorListeners()
+    parser.addErrorListener(RaisingErrorListener())
+    try:
+        tree = parser.programa()
+    except (LexicalError, SyntacticError) as e:
+        print(e)
+        sys.exit(1)
 
-    # Análise semântica
+    # Semântica
     listener = MatlabSemanticListener()
     walker = ParseTreeWalker()
     walker.walk(listener, tree)

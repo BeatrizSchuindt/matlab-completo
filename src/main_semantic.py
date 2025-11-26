@@ -3,7 +3,7 @@ from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 
 from src.gen.grammar.matlabLexer import matlabLexer
 from src.gen.grammar.matlabParser import matlabParser
-from semantic.matlab_semantico_listener import MatlabSemanticListener
+from src.semantic.matlab_semantico_listener import MatlabSemanticListener
 
 
 def main(argv):
