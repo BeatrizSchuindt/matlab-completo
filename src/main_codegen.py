@@ -3,21 +3,20 @@ from antlr4 import FileStream, CommonTokenStream, ParseTreeWalker
 
 from src.gen.grammar.matlabLexer import matlabLexer
 from src.gen.grammar.matlabParser import matlabParser
-from src.semantic.matlab_semantic_listener import MatlabSemanticListener
+from semantic.matlab_semantico_listener import MatlabSemanticListener
 from src.codegen.matlab_codegen_visitor import MatlabCodeGenVisitor
 
 
 def compilar_arquivo(input_path: str, output_path: str = "output.py") -> None:
-    # 1) Lê o arquivo .m
     input_stream = FileStream(input_path, encoding="utf-8")
 
-    # 2) Léxico + parser
+    # Léxico + parser
     lexer = matlabLexer(input_stream)
     token_stream = CommonTokenStream(lexer)
     parser = matlabParser(token_stream)
     tree = parser.programa()
 
-    # 3) Análise semântica
+    # Análise semântica
     listener = MatlabSemanticListener()
     walker = ParseTreeWalker()
     walker.walk(listener, tree)
@@ -28,7 +27,7 @@ def compilar_arquivo(input_path: str, output_path: str = "output.py") -> None:
             print(err)
         sys.exit(1)
 
-    # 4) Geração de código Python
+    # Geração de código Python
     codegen = MatlabCodeGenVisitor(output_file=output_path)
     codegen.visit(tree)
     codegen.save()

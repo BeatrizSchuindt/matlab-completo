@@ -2,8 +2,8 @@ from antlr4 import *
 from src.gen.grammar.matlabParser import matlabParser
 from src.gen.grammar.matlabListener import matlabListener
 
-from src.semantic.symbol_table import Scope
-from src.semantic.semantic_errors import SemanticError
+from semantic.tabela_simbolos import Scope
+from semantic.erros_semanticos import SemanticError
 
 
 class MatlabSemanticListener(matlabListener):
