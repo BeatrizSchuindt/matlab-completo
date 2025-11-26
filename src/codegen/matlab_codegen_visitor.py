@@ -22,11 +22,7 @@ class MatlabCodeGenVisitor(matlabVisitor):
         self.indent_level: int = 0
         self.output_file: Optional[str] = output_file
 
-        # Funções "especiais" que tratamos como built-ins
-        # (não são convertidas em indexação ID(...) → ID[...])
         self.builtin_functions = {"input", "fprintf", "error", "zeros"}
-
-    # ========= Helpers básicos de geração =========
 
     def _indent(self) -> str:
         return "    " * self.indent_level
@@ -53,8 +49,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
         if self.output_file:
             with open(self.output_file, "w", encoding="utf-8") as f:
                 f.write(self.get_code())
-
-    # ========= Helpers específicos da tradução =========
 
     def _emit_helpers(self) -> None:
         """
@@ -84,17 +78,8 @@ class MatlabCodeGenVisitor(matlabVisitor):
     # ----- helpers de indexação 1-based → 0-based -----
 
     def _index_expr(self, expr_code: str) -> str:
-        """
-        Converte expressão de índice 1-based para 0-based.
-
-        Exemplos:
-            '1'      -> '0'
-            'i'      -> '(i - 1)'
-            'i + 1'  -> '(i + 1 - 1)'
-        """
         expr_code = expr_code.strip()
 
-        # se for literal inteiro simples, calcula direto
         if re.fullmatch(r"\d+", expr_code):
             return str(int(expr_code) - 1)
 
@@ -102,25 +87,12 @@ class MatlabCodeGenVisitor(matlabVisitor):
         return f"({expr_code} - 1)"
 
     def _rewrite_indexing(self, code: str) -> str:
-        """
-        Reescreve usos de ID(expr, ...) que sejam indexação Matlab 1-based
-        para a forma Python 0-based:
-
-            row(j)        -> row[j-1]
-            nextRow(1)    -> nextRow[0]
-            A(i, j)       -> A[i-1][j-1]
-
-        Mantém chamadas de funções builtin (input, fprintf, error, zeros).
-        """
-        # Atenção: padrão simplificado, não trata todos os casos possíveis,
-        # mas cobre bem os usos típicos (row(j), row(j-1), A(i,j), etc.).
         pattern = re.compile(r"([A-Za-z_]\w*)\(([^()]*)\)")
 
         def repl(match: re.Match) -> str:
             name = match.group(1)
             args_str = match.group(2).strip()
 
-            # built-ins: não mexe, deixa como chamada de função
             if name in self.builtin_functions:
                 return match.group(0)
 
@@ -128,7 +100,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
                 # algo como x() – trata como variável simples
                 return name
 
-            # separa argumentos por vírgula (simples; não trata vírgulas aninhadas)
             args = [a.strip() for a in args_str.split(",") if a.strip()]
 
             # converte cada argumento de 1-based para 0-based
@@ -145,11 +116,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
         return pattern.sub(repl, code)
 
     def _translate_expression(self, ctx) -> str:
-        """
-        Pega o texto original da expressão Matlab e faz substituições
-        simples de operadores para Python, além de ajustar indexação
-        1-based → 0-based em usos tipo row(j).
-        """
         text = ctx.getText()
 
         # Comparação diferente
@@ -158,12 +124,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
         # Operadores lógicos
         text = text.replace("&&", " and ")
         text = text.replace("||", " or ")
-
-        # Mantemos & e | como bitwise (&, |) em Python.
-        # text = text.replace("&", " & ")
-        # text = text.replace("|", " | ")
-
-        # Potência e operações element-wise
         text = text.replace(".^", "**")
         text = text.replace("^", "**")
         text = text.replace(".*", "*")
@@ -184,7 +144,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
         """
         parts = [p.strip() for p in expr_text.split(":")]
         if len(parts) == 1:
-            # Não é intervalo, itera direto sobre a expressão
             return parts[0]
         if len(parts) == 2:
             start, end = parts
@@ -192,7 +151,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
         if len(parts) == 3:
             start, step, end = parts
             return f"range({start}, {end} + 1, {step})"
-        # Caso estranho (mais de dois ':') – retorna como está
         return expr_text
 
     def _translate_fprintf(self, code: str) -> str:
@@ -209,16 +167,12 @@ class MatlabCodeGenVisitor(matlabVisitor):
         if not inner:
             return "print()"
 
-        # Divide em formato e restante. Não trata vírgulas internas em profundidade,
-        # mas é suficiente para os usos típicos.
         parts = [p.strip() for p in inner.split(",", 1)]
         fmt = parts[0]
         if len(parts) == 1:
-            # Só uma string, assumimos print desta string (ex: '\n')
             return f"print({fmt}, end='')"
 
         args = parts[1]
-        # Usa o operador % de formatação em Python.
         return f"print({fmt} % ({args}), end='')"
 
     def _translate_error(self, code: str) -> str:
@@ -238,7 +192,6 @@ class MatlabCodeGenVisitor(matlabVisitor):
         """
         stripped = code.strip()
         if stripped.startswith("input("):
-            # Converte para int(input(...)) por padrão (entrada numérica)
             return f"int({stripped})"
         return code
 
@@ -260,19 +213,15 @@ class MatlabCodeGenVisitor(matlabVisitor):
         """
         programa: instrucao* EOF;
         """
-        # Cabeçalho do arquivo Python
         self.emit("# -*- coding: utf-8 -*-")
         self.emit("# Código Python gerado automaticamente a partir de Matlab-like")
         self.emit("")
 
-        # Helpers (zeros, etc.)
         self._emit_helpers()
 
-        # Corpo do programa
         for instr_ctx in ctx.instrucao():
             self.visit(instr_ctx)
 
-        # Salva arquivo (se configurado)
         self.save()
         return None
 
@@ -415,13 +364,11 @@ class MatlabCodeGenVisitor(matlabVisitor):
             # Atribuição simples: x = ...
             return name
 
-        # Caso ID(...)
-        # Aqui interpretamos como indexação de lista/matriz em Python.
         indices: List[str] = []
         if ctx.listaArgumentos():
             for expr_ctx in ctx.listaArgumentos().expressao():
-                raw_idx = self.visit(expr_ctx)          # expressão tal como '1', 'i+1', etc.
-                idx_code = self._index_expr(raw_idx)    # converte 1-based → 0-based
+                raw_idx = self.visit(expr_ctx)          
+                idx_code = self._index_expr(raw_idx)
                 indices.append(idx_code)
 
         if not indices:
@@ -454,9 +401,3 @@ class MatlabCodeGenVisitor(matlabVisitor):
             ;
         """
         return self._translate_expression(ctx)
-
-    # ========= Átomos / Matrizes (caso queira evoluir depois) =========
-    # No momento, a tradução principal de expressões é feita por texto
-    # (_translate_expression). Como a sintaxe de literais de lista
-    # [1, 2, 3] já é igual em Matlab e Python, não precisamos tratar
-    # matriz em detalhes aqui para os exemplos atuais.

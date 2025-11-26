@@ -25,7 +25,6 @@ class MatlabSemanticListener(matlabListener):
         ]
 
         for name in builtin_funcs:
-            # marca como função embutida no escopo global
             self.global_scope.define(name, type_="builtin_function")
 
     # ---------- utilitários internos ----------
@@ -83,7 +82,6 @@ class MatlabSemanticListener(matlabListener):
             | NUMBER
             | STRING
         """
-        # Se for NUMBER ou STRING, nada pra checar
         if ctx.NUMBER() or ctx.STRING():
             return
 
